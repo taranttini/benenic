@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEN & NIC Músicas Bíblicas</title>
+    <!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KJ7QLB64');</script><!-- End Google Tag Manager -->
+    
+    <!-- Google Fonts: Fredoka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Biblioteca sql.js (WebAssembly) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+
+    <style>
+        /* DEFINIÇÃO DE VARIÁVEIS DE CORES (TEMAS) */
+        :root {
+            --bg-grad-1: #4da6ff;
+            --bg-grad-2: #2b80ff;
+            --footer-wave: #8cd9b3;
+            --primary-color: #2b80ff;
+            --primary-hover: #1d4ed8;
+            --card-bg: #ffffff;
+            --card-border: #eef2f7;
+            --text-main: #2d3436;
+            --text-box-bg: #f0f7ff;
+            --text-box-color: #1e3a8a;
+            --text-box-border: #dbeafe;
+            --btn-amarelo: #ffaa33;
+            --btn-amarelo-sombra: #cc8400;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+            --navbar-text: #2b80ff;
+            --highlight-bg: #fef08a;
+            --highlight-color: #854d0e;
+        }
+
+        /* TEMA 2: Amarelo Sol / Tarde Alegre */
+        [data-tema="sol"] {
+            --bg-grad-1: #ffce3b;
+            --bg-grad-2: #ff9100;
+            --footer-wave: #ffe680;
+            --primary-color: #d97706;
+            --primary-hover: #b45309;
+            --card-bg: #ffffff;
+            --card-border: #fde68a;
+            --text-box-bg: #fffbeb;
+            --text-box-color: #78350f;
+            --text-box-border: #fde68a;
+        }
+
+        /* TEMA 3: Rosa Morango / Encantado */
+        [data-tema="morango"] {
+            --bg-grad-1: #ff66b2;
+            --bg-grad-2: #ff1a8c;
+            --footer-wave: #ff99cc;
+            --primary-color: #db2777;
+            --primary-hover: #be185d;
+            --card-bg: #ffffff;
+            --card-border: #fbcfe8;
+            --text-box-bg: #fdf2f8;
+            --text-box-color: #831843;
+            --text-box-border: #fbcfe8;
+        }
+
+        /* TEMA 4: Verde Floresta / Aventura */
+        [data-tema="floresta"] {
+            --bg-grad-1: #34d399;
+            --bg-grad-2: #059669;
+            --footer-wave: #a7f3d0;
+            --primary-color: #047857;
+            --primary-hover: #065f46;
+            --card-bg: #ffffff;
+            --card-border: #a7f3d0;
+            --text-box-bg: #ecfdf5;
+            --text-box-color: #064e3b;
+            --text-box-border: #a7f3d0;
+        }
+
+        /* TEMA 5: Roxo Sonho / Estrelado */
+        [data-tema="roxa"] {
+            --bg-grad-1: #8b5cf6;
+            --bg-grad-2: #5b21b6;
+            --footer-wave: #c4b5fd;
+            --primary-color: #7c3aed;
+            --primary-hover: #6d28d9;
+            --card-bg: #ffffff;
+            --card-border: #ddd6fe;
+            --text-box-bg: #f5f3ff;
+            --text-box-color: #3b0764;
+            --text-box-border: #ddd6fe;
+        }
+
+        /* TEMA 6: Escuro / Grafite Noite */
+        [data-tema="escuro"] {
+            --bg-grad-1: #111827;
+            --bg-grad-2: #030712;
+            --footer-wave: #1f2937;
+            --primary-color: #818cf8;
+            --primary-hover: #6366f1;
+            --card-bg: #1f2937;
+            --card-border: #374151;
+            --text-main: #f9fafb;
+            --text-box-bg: #111827;
+            --text-box-color: #e5e7eb;
+            --text-box-border: #374151;
+            --navbar-bg: rgba(31, 41, 55, 0.95);
+            --navbar-text: #818cf8;
+            --highlight-bg: #ca8a04;
+            --highlight-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: var(--footer-wave);
+            border-radius: 50% 50% 0 0 / 50px 50px 0 0;
+            z-index: -1;
+            opacity: 0.9;
+            transition: background 0.4s ease;
+        }
+
+        mark.highlight {
+            background-color: var(--highlight-bg);
+            color: var(--highlight-color);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .topo-criancas-banner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .imagem-topo-centralizada {
+            max-height: 250px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+            animation: flutuar 3s ease-in-out infinite alternate;
+        }
+
+        @media (max-width: 768px) {
+            .imagem-topo-centralizada {
+                max-height: 140px;
+            }
+        }
+
+        @keyframes flutuar {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+
+        .top-navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--card-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .brand-title {
+            color: var(--navbar-text);
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .select-livro-nav {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background: var(--text-box-bg);
+            border: 2px solid var(--text-box-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn-hamburger {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 var(--primary-hover);
+            transition: all 0.1s;
+        }
+
+        .btn-hamburger:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--primary-hover);
+        }
+
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            z-index: 2000;
+        }
+
+        .drawer-overlay.aberto {
+            display: block;
+        }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--card-bg);
+            color: var(--text-main);
+            z-index: 2001;
+            box-shadow: 6px 0 25px rgba(0,0,0,0.2);
+            transition: left 0.3s ease, background 0.4s ease;
+            padding: 25px 20px;
+            overflow-y: auto;
+        }
+
+        .drawer-menu.aberto {
+            left: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px dashed var(--card-border);
+            padding-bottom: 15px;
+        }
+
+        .drawer-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .btn-fechar-drawer {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .secao-temas {
+            margin-top: 25px;
+            border-top: 2px dashed var(--card-border);
+            padding-top: 20px;
+        }
+
+        .secao-temas h4 {
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .grid-temas {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .btn-tema {
+            background: var(--text-box-bg);
+            color: var(--text-main);
+            border: 2px solid var(--text-box-border);
+            border-radius: 12px;
+            padding: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-tema:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.03);
+        }
+
+        .btn-tema.ativo-tema {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        #status {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        input[type="search"] {
+            width: 100%;
+            max-width: 550px;
+            padding: 16px 30px;
+            font-size: 1.2rem;
+            font-family: inherit;
+            border-radius: 50px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            outline: none;
+            border: 2px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        input[type="search"]:focus {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        .grid-leitura {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 992px) {
+            .grid-leitura {
+                grid-template-columns: 1fr 380px;
+                align-items: start;
+            }
+        }
+
+        .card-conteudo {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 28px;
+            padding: 35px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+            border: 4px solid var(--card-border);
+            position: relative;
+            transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+        }
+
+        .card-conteudo.card-centro {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-busca-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .barra-top-acoes {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        h2, h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .titulo-destaque-livro {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: var(--btn-amarelo);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--btn-amarelo-sombra), 0 10px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.1s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover { filter: brightness(1.05); }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--btn-amarelo-sombra); }
+
+        .btn-verde {
+            background-color: #3cd070;
+            box-shadow: 0 6px 0 #28934d, 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .btn-verde:active { box-shadow: 0 2px 0 #28934d; }
+
+        .btn-voltar {
+            background-color: var(--btn-amarelo);
+            box-shadow: 0 6px 0 var(--btn-amarelo-sombra), 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-compartilhar {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 14px 24px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 0 #1d4ed8, 0 10px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.1s ease;
+            flex-shrink: 0;
+        }
+
+        .btn-compartilhar:hover { filter: brightness(1.05); }
+        .btn-compartilhar:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1d4ed8;
+        }
+
+        .navegacao-leitura {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--card-border);
+        }
+
+        .btn-nav-capitulo {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--primary-hover);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav-capitulo:hover:not(:disabled) { filter: brightness(1.05); }
+        .btn-nav-capitulo:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--primary-hover);
+        }
+        .btn-nav-capitulo:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .letra-caixa {
+            background-color: var(--text-box-bg);
+            border-radius: 22px;
+            padding: 30px;
+            font-size: 1.35rem;
+            line-height: 2.1;
+            color: var(--text-box-color);
+            margin: 20px 0;
+            border: 3px solid var(--text-box-border);
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .letra-formatada {
+            font-family: 'Comic Sans MS', 'Fredoka', cursive, sans-serif;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        .sidebar-leitura {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .youtube-wrapper {
+            width: 100%;
+            position: relative;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .youtube-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 4px solid var(--card-border);
+            background: #000;
+            transition: border-color 0.4s ease;
+        }
+
+        .youtube-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Modo Flutuante ativado dinamicamente ao rolar a página */
+        .youtube-wrapper.flutuante {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            z-index: 9999;
+            margin-bottom: 0;
+            animation: surgirFlutuante 0.3s ease;
+        }
+        
+        .youtube-wrapper.flutuante .youtube-container {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border: 4px solid var(--card-border);
+        }
+        
+        .youtube-wrapper.flutuante .btn-fechar-video { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        .btn-fechar-video {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        @keyframes surgirFlutuante {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Botões de Ação do Vídeo */
+        .acoes-video-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-acao-video {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: inline-block;
+            transition: transform 0.1s;
+        }
+
+        .btn-acao-video:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .youtube-wrapper.fixo-relative .btn-ativar-flutuante {
+            display: inline-block;
+        }
+
+        .trilha-capitulos {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 22px;
+            padding: 20px;
+            border: 4px solid var(--card-border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .trilha-capitulos h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .botoes-capitulos-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-capitulo-rapido {
+            background-color: var(--text-box-bg);
+            color: var(--text-box-color);
+            border: 2px solid var(--text-box-border);
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-align: left;
+            transition: all 0.15s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn-capitulo-rapido:hover {
+            border-color: var(--primary-color);
+            filter: brightness(1.1);
+        }
+
+        .btn-capitulo-rapido.ativo {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-hover);
+            box-shadow: 0 4px 0 var(--primary-hover);
+        }
+
+        .item-lista {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--text-box-bg);
+            padding: 18px 24px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            border: 2px solid var(--text-box-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .item-lista span {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-box-color);
+        }
+
+        #toastNotificacao {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        #toastNotificacao.visivel {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .grid-botoes-flex {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .drawer-botoes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .titulo-pagina-branca {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KJ7QLB64" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- BANNER CENTRALIZADO COM AS CRIANÇAS NO TOPO -->
+    <div class="topo-criancas-banner">
+        <img src="banner.png" alt="BEN & NIC" class="imagem-topo-centralizada">
+    </div>
+
+    <nav class="top-navbar">
+        <div class="nav-actions">
+            <button class="btn-hamburger" onclick="abrirDrawer()" title="Menu">☰</button>
+        </div>
+        <div class="brand-title" onclick="mostrarListaLivros()">
+            BEN & NIC
+        </div>
+        <div class="nav-actions">
+            <select id="selectLivroNav" class="select-livro-nav" onchange="selecionarLivroPeloMenu(this.value)">
+                <option value="">Livros...</option>
+            </select>
+        </div>
+    </nav>
+
+    <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()"></div>
+    <div class="drawer-menu" id="drawerMenu">
+        <div class="drawer-header">
+            <h3>Navegação</h3>
+            <button class="btn-fechar-drawer" onclick="fecharDrawer()">✕</button>
+        </div>
+        
+        <div id="drawerConteudo">
+            <p>Carregando livros...</p>
+        </div>
+
+        <div class="secao-temas">
+            <h4>Escolha o Tema:</h4>
+            <div class="grid-temas">
+                <button class="btn-tema ativo-tema" onclick="mudarTema('azul')" id="btn-tema-azul">Clássico</button>
+                <button class="btn-tema" onclick="mudarTema('sol')" id="btn-tema-sol">Sol</button>
+                <button class="btn-tema" onclick="mudarTema('morango')" id="btn-tema-morango">Morango</button>
+                <button class="btn-tema" onclick="mudarTema('floresta')" id="btn-tema-floresta">Floresta</button>
+                <button class="btn-tema" onclick="mudarTema('roxa')" id="btn-tema-roxa">Sonho</button>
+                <button class="btn-tema" onclick="mudarTema('escuro')" id="btn-tema-escuro">Escuro</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <header>
+            <h1>BEN & NIC - Músicas Bíblicas</h1>
+            <p id="status">Carregando o livro de músicas...</p>
+        </header>
+
+        <div class="search-box" id="secao-busca" style="display: none;">
+            <input type="search" id="inputBusca" placeholder="🔍 Pesquisar por título, palavra ou letra..." oninput="filtrarMusicas()">
+        </div>
+
+        <div id="app"></div>
+    </main>
+
+    <!-- TOAST DE NOTIFICAÇÃO -->
+    <div id="toastNotificacao">Link copiado com sucesso!</div>
+
+    <script>
+        let db = null;
+        let dadosMusicas = [];
+        let dadosLivros = [];
+        let videoFixadoNoConteudo = false; 
+        let videoExpandido = false;
+        let termoBuscaAtual = "";
+
+        function escapeHtml(string) {
+            if (!string) return '';
+            return String(string)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function highlightText(texto, termo) {
+            const textoEscapado = escapeHtml(texto);
+            if (!termo || !termo.trim()) return textoEscapado;
+            
+            const termoLimpo = termo.trim().replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            const regex = new RegExp(`(${termoLimpo})`, 'gi');
+            return textoEscapado.replace(regex, '<mark class="highlight">$1</mark>');
+        }
+
+        function carregarTemaSalvo() {
+            const temaSalvo = localStorage.getItem('cantinho_tema') || 'azul';
+            aplicarTema(temaSalvo, false);
+        }
+
+        function mudarTema(nomeTema) {
+            aplicarTema(nomeTema, true);
+        }
+
+        function aplicarTema(nomeTema, salvar = true) {
+            if (nomeTema === 'azul') {
+                document.documentElement.removeAttribute('data-tema');
+            } else {
+                document.documentElement.setAttribute('data-tema', nomeTema);
+            }
+
+            if (salvar) {
+                localStorage.setItem('cantinho_tema', nomeTema);
+            }
+
+            document.querySelectorAll('.btn-tema').forEach(btn => btn.classList.remove('ativo-tema'));
+            const btnAtivo = document.getElementById(`btn-tema-${nomeTema}`);
+            if (btnAtivo) btnAtivo.classList.add('ativo-tema');
+        }
+
+        carregarTemaSalvo();
+
+        function compartilharHistoria(titulo, livroId = null, capNum = null) {
+            let urlCompartilhar = window.location.origin + window.location.pathname;
+            if (livroId && capNum) {
+                urlCompartilhar += `?livro=${livroId}&cap=${capNum}`;
+            } else if (livroId) {
+                urlCompartilhar += `?livro=${livroId}`;
+            }
+
+            const dadosShare = {
+                title: titulo + " - Cantinho Mágico",
+                text: `Venha ler/ouvir "${titulo}" no Cantinho Mágico! ✨`,
+                url: urlCompartilhar
+            };
+
+            if (navigator.share) {
+                navigator.share(dadosShare).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(urlCompartilhar).then(() => {
+                    mostrarToast("✨ Link copiado para a área de transferência!");
+                }).catch(() => {
+                    mostrarToast("Ops! Não foi possível copiar o link.");
+                });
+            }
+        }
+
+        function mostrarToast(mensagem) {
+            const toast = document.getElementById('toastNotificacao');
+            toast.innerText = mensagem;
+            toast.classList.add('visivel');
+            setTimeout(() => {
+                toast.classList.remove('visivel');
+            }, 3000);
+        }
+
+        initSqlJs({
+            locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+        }).then(SQL => {
+            fetch('db.db')
+                .then(response => {
+                    if (!response.ok) throw new Error("Não foi possível encontrar o arquivo db.db!");
+                    return response.arrayBuffer();
+                })
+                .then(buffer => {
+                    db = new SQL.Database(new Uint8Array(buffer));
+                    document.getElementById('status').style.display = 'none';
+                    document.getElementById('secao-busca').style.display = 'block';
+                    
+                    carregarDadosDoBanco();
+                    atualizarMenusNav();
+                    processarQueryParams(); 
+                })
+                .catch(err => {
+                    const elStatus = document.getElementById('status');
+                    elStatus.innerText = "Ops! Erro ao carregar o banco: " + err.message;
+                    elStatus.style.backgroundColor = "#ff4d4d";
+                });
+        });
+
+        function carregarDadosDoBanco() {
+            const resLivros = db.exec("SELECT id, descricao FROM livros");
+            if (resLivros.length > 0) {
+                const cols = resLivros[0].columns;
+                dadosLivros = resLivros[0].values.map(row => ({
+                    id: row[cols.indexOf('id')],
+                    descricao: row[cols.indexOf('descricao')]
+                }));
+            }
+
+            const resMusicas = db.exec("SELECT id, livro_id, capitulo, titulo, conteudo, url FROM musicas");
+            if (resMusicas.length > 0) {
+                const cols = resMusicas[0].columns;
+                dadosMusicas = resMusicas[0].values.map(row => ({
+                    id: row[cols.indexOf('id')],
+                    livro_id: row[cols.indexOf('livro_id')],
+                    capitulo: row[cols.indexOf('capitulo')],
+                    titulo: row[cols.indexOf('titulo')],
+                    conteudo: row[cols.indexOf('conteudo')],
+                    url: row[cols.indexOf('url')]
+                }));
+            }
+        }
+
+        function atualizarMenusNav() {
+            const selectNav = document.getElementById('selectLivroNav');
+            selectNav.innerHTML = '<option value="">Livros...</option>';
+            
+            let htmlDrawer = '<h4>Escolha um Livro:</h4><div class="drawer-botoes-container">';
+
+            dadosLivros.forEach(livro => {
+                const desc = escapeHtml(livro.descricao);
+                selectNav.innerHTML += `<option value="${livro.id}">${desc}</option>`;
+                htmlDrawer += `
+                    <button class="btn-capitulo-rapido" onclick="selecionarLivroPeloMenu(${livro.id}); fecharDrawer();">
+                        ${desc}
+                    </button>
+                `;
+            });
+
+            htmlDrawer += '</div>';
+            document.getElementById('drawerConteudo').innerHTML = htmlDrawer;
+            
+            const temaAtual = localStorage.getItem('cantinho_tema') || 'azul';
+            const btnAtivo = document.getElementById(`btn-tema-${temaAtual}`);
+            if (btnAtivo) btnAtivo.classList.add('ativo-tema');
+        }
+
+        function selecionarLivroPeloMenu(livroId) {
+            if (!livroId) return;
+            termoBuscaAtual = "";
+            document.getElementById('inputBusca').value = "";
+            mostrarCapitulos(parseInt(livroId));
+            document.getElementById('selectLivroNav').value = "";
+        }
+
+        function abrirDrawer() {
+            document.getElementById('drawerOverlay').classList.add('aberto');
+            document.getElementById('drawerMenu').classList.add('aberto');
+        }
+
+        function fecharDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('aberto');
+            document.getElementById('drawerMenu').classList.remove('aberto');
+        }
+
+        function processarQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            const livroId = parseInt(params.get('livro'));
+            const capNum = parseInt(params.get('cap'));
+
+            if (livroId && capNum) {
+                const musica = dadosMusicas.find(m => m.livro_id === livroId && m.capitulo === capNum);
+                if (musica) {
+                    abrirMusica(musica.id, false);
+                    return;
+                }
+            }
+
+            if (livroId) {
+                const livro = dadosLivros.find(l => l.id === livroId);
+                if (livro) {
+                    mostrarCapitulos(livroId, false);
+                    return;
+                }
+            }
+
+            mostrarListaLivros(false);
+        }
+
+        function atualizarUrlParams(livroId = null, capNum = null) {
+            let novaUrl = window.location.pathname;
+            if (livroId && capNum) {
+                novaUrl += `?livro=${livroId}&cap=${capNum}`;
+            } else if (livroId) {
+                novaUrl += `?livro=${livroId}`;
+            }
+            window.history.pushState({}, '', novaUrl);
+        }
+
+        function obterIdYoutube(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function configurarScrollVideo() {
+            const wrapper = document.getElementById('youtubeWrapper');
+            if (!wrapper) return;
+
+            window.onscroll = function() {
+                // Se o vídeo estiver expandido no conteúdo ou fixado, não flutua ao rolar
+                if (videoFixadoNoConteudo || videoExpandido) return;
+
+                if (window.scrollY > 250) {
+                    wrapper.classList.add('flutuante');
+                    wrapper.classList.remove('fixo-relative');
+                } else {
+                    wrapper.classList.remove('flutuante');
+                }
+            };
+        }
+
+        function fecharVideoFlutuante() {
+            if (videoExpandido) {
+                alternarExpandirVideo();
+                return;
+            }
+            videoFixadoNoConteudo = true;
+            const wrapper = document.getElementById('youtubeWrapper');
+            if (wrapper) {
+                wrapper.classList.remove('flutuante');
+                wrapper.classList.add('fixo-relative');
+            }
+        }
+
+        function reativarFlutuante() {
+            if (videoExpandido) {
+                alternarExpandirVideo();
+            }
+            videoFixadoNoConteudo = false;
+            const wrapper = document.getElementById('youtubeWrapper');
+            if (wrapper) {
+                wrapper.classList.remove('fixo-relative');
+                if (window.scrollY > 250) {
+                    wrapper.classList.add('flutuante');
+                }
+            }
+        }
+
+        // Mova fisicamente o wrapper do vídeo entre o card do conteúdo principal e o sidebar
+        function alternarExpandirVideo() {
+            videoExpandido = !videoExpandido;
+            const wrapper = document.getElementById('youtubeWrapper');
+            const slotMain = document.getElementById('slotVideoExpandido');
+            const slotSidebar = document.getElementById('slotVideoSidebar');
+
+            if (!wrapper || !slotMain || !slotSidebar) return;
+
+            if (videoExpandido) {
+                // Move para o slot no conteúdo principal (fica grande sobre a letra)
+                slotMain.appendChild(wrapper);
+                wrapper.classList.remove('flutuante');
+            } else {
+                // Retorna para a barra lateral
+                slotSidebar.prepend(wrapper);
+            }
+            
+            atualizarTextoBotaoExpandir();
+        }
+
+        function atualizarTextoBotaoExpandir() {
+            const btn = document.getElementById('btnExpandirTexto');
+            if (btn) {
+                btn.innerText = videoExpandido ? "_ Minimizar Vídeo" : "⛶ Expandir Vídeo";
+            }
+        }
+
+        function mostrarListaLivros(atualizarUrl = true) {
+            window.onscroll = null;
+            termoBuscaAtual = "";
+            document.getElementById('inputBusca').value = "";
+            if (atualizarUrl) atualizarUrlParams();
+
+            let html = "<h2 class='titulo-pagina-branca'>Escolha um Livrinho:</h2>";
+            
+            if (dadosLivros.length === 0) {
+                html += `<div class="card-conteudo card-centro"><p>Nenhum livro cadastrado no banco.</p></div>`;
+            }
+
+            dadosLivros.forEach(livro => {
+                const desc = escapeHtml(livro.descricao);
+                const descSegura = desc.replace(/'/g, "\\'");
+                html += `
+                    <div class="card-conteudo card-centro">
+                        <h3 class="titulo-destaque-livro">${desc}</h3>
+                        <div class="grid-botoes-flex">
+                            <button class="btn btn-verde" onclick="mostrarCapitulos(${livro.id})">Abrir Livro</button>
+                            <button class="btn-compartilhar" onclick="compartilharHistoria('${descSegura}', ${livro.id})">Compartilhar</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('app').innerHTML = html;
+        }
+
+        function mostrarCapitulos(livroId, atualizarUrl = true) {
+            window.onscroll = null;
+            if (atualizarUrl) atualizarUrlParams(livroId);
+
+            const livroAtual = dadosLivros.find(l => l.id === livroId);
+            const musicasDoLivro = dadosMusicas.filter(m => m.livro_id === livroId);
+            const descLivro = escapeHtml(livroAtual ? livroAtual.descricao : '');
+
+            let html = `
+                <div class="barra-top-acoes">
+                    <button class="btn btn-voltar" onclick="mostrarListaLivros()">⬅ Voltar aos Livros</button>
+                    <button class="btn-compartilhar" onclick="compartilharHistoria('${descLivro.replace(/'/g, "\\'")}', ${livroId})">Compartilhar Livro</button>
+                </div>
+                <div class="card-conteudo">
+                    <h2 style="font-size: 2.2rem; margin-bottom: 25px;">${descLivro}</h2>
+            `;
+
+            if (musicasDoLivro.length === 0) {
+                html += `<p style="text-align: center; font-size: 1.2rem; opacity: 0.8;">Nenhum capítulo cadastrado neste livro ainda.</p>`;
+            } else {
+                musicasDoLivro.forEach(m => {
+                    html += `
+                        <div class="item-lista">
+                            <span>${escapeHtml(m.titulo)}</span>
+                            <button class="btn btn-verde" style="padding: 10px 22px; font-size: 1rem;" onclick="abrirMusica(${m.id})">Ler / Ver</button>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div>`;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        function abrirMusica(id, atualizarUrl = true) {
+            videoFixadoNoConteudo = false;
+            videoExpandido = false;
+            const m = dadosMusicas.find(item => item.id === id);
+            if (!m) return;
+
+            if (atualizarUrl) atualizarUrlParams(m.livro_id, m.capitulo);
+
+            const capitulosDoLivro = dadosMusicas.filter(item => item.livro_id === m.livro_id);
+            const indiceAtual = capitulosDoLivro.findIndex(item => item.id === m.id);
+
+            const idAnterior = indiceAtual > 0 ? capitulosDoLivro[indiceAtual - 1].id : null;
+            const idProximo = indiceAtual < capitulosDoLivro.length - 1 ? capitulosDoLivro[indiceAtual + 1].id : null;
+
+            let widgetYoutube = "";
+            const ytId = obterIdYoutube(m.url);
+            if (ytId) {
+                widgetYoutube = `
+                    <div class="youtube-wrapper" id="youtubeWrapper">
+                        <button class="btn-fechar-video" onclick="fecharVideoFlutuante()" title="Minimizar / Voltar">✕</button>
+                        <div class="youtube-container">
+                            <iframe src="https://www.youtube.com/embed/${ytId}" title="Vídeo do YouTube" allowfullscreen></iframe>
+                        </div>
+                        <div class="acoes-video-container">
+                            <button class="btn-acao-video" id="btnExpandirTexto" onclick="alternarExpandirVideo()">⛶ Expandir Vídeo</button>
+                            <button class="btn-acao-video btn-ativar-flutuante" onclick="reativarFlutuante()">- Tornar Flutuante</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let botoesRapidosHtml = "";
+            capitulosDoLivro.forEach(cap => {
+                const classeAtiva = (cap.id === m.id) ? "ativo" : "";
+                botoesRapidosHtml += `
+                    <button class="btn-capitulo-rapido ${classeAtiva}" onclick="abrirMusica(${cap.id})">
+                        <span>${escapeHtml(cap.titulo)}</span>
+                        <span>▶</span>
+                    </button>
+                `;
+            });
+
+            const tituloDestaque = highlightText(m.titulo, termoBuscaAtual);
+            const conteudoDestaque = highlightText(m.conteudo, termoBuscaAtual);
+            const tituloEscapadoSeguro = escapeHtml(m.titulo).replace(/'/g, "\\'");
+
+            let html = `
+                <div class="barra-top-acoes">
+                    <button class="btn btn-voltar" onclick="mostrarCapitulos(${m.livro_id})">⬅ Voltar aos Capítulos</button>
+                    <button class="btn-compartilhar" onclick="compartilharHistoria('${tituloEscapadoSeguro}', ${m.livro_id}, ${m.capitulo})">Compartilhar</button>
+                </div>
+                
+                <div class="grid-leitura">
+                    <div class="card-conteudo">
+                        <h2 style="font-size: 2.2rem; margin-bottom: 20px;">${tituloDestaque}</h2>
+                        
+                        <!-- SLOT ONDE O VÍDEO É MOVIDO QUANDO O USUÁRIO CLICA EM EXPANDIR -->
+                        <div id="slotVideoExpandido"></div>
+
+                        <div class="letra-caixa">
+                            <pre class="letra-formatada">${conteudoDestaque}</pre>
+                        </div>
+
+                        <div class="navegacao-leitura">
+                            <button class="btn-nav-capitulo" ${idAnterior ? `onclick="abrirMusica(${idAnterior})"` : 'disabled'}>
+                                ⬅ Anterior
+                            </button>
+                            <button class="btn-nav-capitulo" ${idProximo ? `onclick="abrirMusica(${idProximo})"` : 'disabled'}>
+                                Próximo ➔
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-leitura" id="sidebarLeitura">
+                        <!-- SLOT PADRÃO DO VÍDEO NA BARRA LATERAL -->
+                        <div id="slotVideoSidebar">
+                            ${widgetYoutube}
+                        </div>
+
+                        <div class="trilha-capitulos">
+                            <h4>Outros Capítulos:</h4>
+                            <div class="botoes-capitulos-grid">
+                                ${botoesRapidosHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('app').innerHTML = html;
+            window.scrollTo(0, 0);
+            setTimeout(configurarScrollVideo, 100);
+        }
+
+        function filtrarMusicas() {
+            window.onscroll = null;
+            const termo = document.getElementById('inputBusca').value.trim();
+            termoBuscaAtual = termo; 
+            const appDiv = document.getElementById('app');
+
+            if (termo === "") {
+                mostrarListaLivros();
+                return;
+            }
+
+            const termoLower = termo.toLowerCase();
+            const resultados = dadosMusicas.filter(m => 
+                m.titulo.toLowerCase().includes(termoLower) || 
+                m.conteudo.toLowerCase().includes(termoLower) ||
+                m.capitulo.toString().includes(termoLower)
+            );
+
+            let html = `<h2 class="titulo-pagina-branca">Resultados da Busca ("${escapeHtml(termo)}"):</h2>`;
+
+            if (resultados.length === 0) {
+                html += `<div class="card-conteudo" style="text-align: center;"><p style="font-size: 1.2rem; opacity: 0.8;">Nenhum resultado encontrado :-(</p></div>`;
+            } else {
+                resultados.forEach(m => {
+                    const tituloComHighlight = highlightText(m.titulo, termo);
+                    
+                    let previewTexto = m.conteudo;
+                    const indexTermo = m.conteudo.toLowerCase().indexOf(termoLower);
+                    if (indexTermo > 30) {
+                        previewTexto = "..." + m.conteudo.substring(indexTermo - 20, indexTermo + 60) + "...";
+                    } else {
+                        previewTexto = m.conteudo.substring(0, 80) + "...";
+                    }
+
+                    const previewComHighlight = highlightText(previewTexto, termo);
+                    const tituloEscapadoSeguro = escapeHtml(m.titulo).replace(/'/g, "\\'");
+
+                    html += `
+                        <div class="card-conteudo card-busca-item">
+                            <div>
+                                <h3 style="margin-bottom: 8px; font-size: 1.5rem;">${tituloComHighlight}</h3>
+                                <p style="font-size: 1.1rem; margin: 0; opacity: 0.8;">${previewComHighlight}</p>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-verde" style="padding: 10px 22px;" onclick="abrirMusica(${m.id})">Ver</button>
+                                <button class="btn-compartilhar" style="padding: 10px 18px;" onclick="compartilharHistoria('${tituloEscapadoSeguro}', ${m.livro_id}, ${m.capitulo})">🔗</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            appDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
